@@ -140,9 +140,13 @@
                 export PGPASSFILE=~/gl-notifications-test-rds.pgpass
                 sudo chmod 600 gl-notifications-test-rds.pgpass
                 sudo chown ec2-user:ec2-user ~/gl-notifications-test-rds.pgpass
-                psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "CREATE SCHEMA IF NOT EXISTS eepr${{ github.event.number }};"
+                pg_dump -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -f gl-notifications-test-rds-bkp.dump
+                psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d postgres -c "CREATE DATABASE eepr${{ github.event.number }}db;"
+                psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eepr${{ github.event.number }} -c "CREATE SCHEMA IF NOT EXISTS eepr${{ github.event.number }}sch;"
+                pg_restore -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eepr${{ github.event.number }}db gl-notifications-test-rds.dump
               EOF
-            
+#              psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "CREATE SCHEMA IF NOT EXISTS eepr${{ github.event.number }};"
+              
     Comment-PR-with-Endpoint:
       needs: Provision-SQS-Lambda-VCluster
       runs-on: ubuntu-latest #                runs-on: self-hosted
