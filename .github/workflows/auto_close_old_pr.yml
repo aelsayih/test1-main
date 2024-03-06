@@ -27,20 +27,25 @@
 #            -d '{"merge_method":"close"}'
 
 
-            name: Close Old PRs
+        name: Close Old PRs
+        
+        on:
+          pull_request:
+            types: [opened, synchronize]
+          
+        jobs:
+          close_old_prs:
+            runs-on: ubuntu-latest
+          
+            steps:
+              - name: Close Old PRs
+                if: ${{ steps.timestamp.outputs.timestamp }} - github.event.pull_request.created_at > 300
+                uses: peter-evans/close-pull-request@v2
+                with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                
+              - name: Get current timestamp
+                id: timestamp
+                run: echo "::set-output name=timestamp::$(date +%s)"
 
-            on:
-              pull_request:
-                types: [opened, synchronize]
-            
-            jobs:
-              close_old_prs:
-                runs-on: ubuntu-latest
-            
-                steps:
-                  - name: Close Old PRs
-                    if: ${{ github.event.pull_request.created_at | fromjson | strtotime }} < ${{ github.run_id }} - 300 
-                    uses: peter-evans/close-pull-request@v2
-                    with:
-                      github_token: ${{ secrets.GITHUB_TOKEN }}
             #172800
