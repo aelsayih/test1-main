@@ -1,8 +1,10 @@
+
+
 name: Close Old PRs
 
-on:
-  pull_request:
-    types: [opened, synchronize]
+on: workflow_dispatch
+#  pull_request:
+#    types: [opened, synchronize]
 
 jobs:
   close_old_prs:
@@ -15,10 +17,10 @@ jobs:
           PR_CREATED=$(jq -r '.pull_request.created_at' "$GITHUB_EVENT_PATH")
           NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           PR_AGE=$(($(date -d "$NOW" +%s) - $(date -d "$PR_CREATED" +%s)))
-          echo "::set-output name=pr_age::$(($PR_AGE / 3600))"
+          echo "::set-output name=pr_age::$(($PR_AGE / 60))"
 
       - name: Close Old PRs
-        if: ${{ steps.pr_age.outputs.pr_age }} > 48
+        if: ${{ steps.pr_age.outputs.pr_age }} > 5
         run: |
           PR_NUMBER=$(jq -r '.pull_request.number' "$GITHUB_EVENT_PATH")
           curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
