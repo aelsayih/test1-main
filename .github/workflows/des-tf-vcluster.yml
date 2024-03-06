@@ -67,7 +67,7 @@ jobs:
             export PGPASSFILE=~/gl-notifications-test-rds.pgpass
             sudo chmod 600 gl-notifications-test-rds.pgpass
             sudo chown ec2-user:ec2-user ~/gl-notifications-test-rds.pgpass
-            psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "DROP DATBASE eepr${{ github.event.number }}db;"
+            psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "DROP DATABASE eepr${{ github.event.number }}db;"
           EOF
          
       - name: install vcluster plugin to delete VCluster PR 
