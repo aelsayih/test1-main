@@ -39,8 +39,8 @@
             
                 steps:
                   - name: Close Old PRs
-                    if: ${{ github.event.pull_request.created_at | fromjson | strtotime }} < ${{ github.run_id }} - 172800
+                    if: ${{ github.event.pull_request.created_at | fromjson | strtotime }} < ${{ github.run_id }} - 300 
                     uses: peter-evans/close-pull-request@v2
                     with:
                       github_token: ${{ secrets.GITHUB_TOKEN }}
-            
+            #172800
