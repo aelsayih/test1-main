@@ -143,7 +143,7 @@
                 pg_dump -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -f gl-notifications-test-rds-bkp.dump
                 psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d postgres -c "CREATE DATABASE eepr${{ github.event.number }}db;"
                 psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eepr${{ github.event.number }} -c "CREATE SCHEMA IF NOT EXISTS eepr${{ github.event.number }}sch;"
-                pg_restore -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eepr${{ github.event.number }}db gl-notifications-test-rds.dump
+                psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eeprdb < gl-notifications-test-rds-bkp.dump
               EOF
 #              psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "CREATE SCHEMA IF NOT EXISTS eepr${{ github.event.number }};"
               

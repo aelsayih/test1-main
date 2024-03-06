@@ -73,7 +73,7 @@ jobs:
 
       - name: DELETE ALL RDS NEW SCHEMAs
         run: |
-           ssh -o StrictHostKeyChecking=no -A -L 5432:3.239.99.255:5432 ec2-user@3.239.99.255 'bash -s' << 'EOF'
+           ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
              export PGPASSFILE=~/.pgpass
              psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds << 'PSQL_EOF'
                DO $$ 
