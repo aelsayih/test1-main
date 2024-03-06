@@ -74,7 +74,9 @@ jobs:
       - name: DELETE ALL RDS DATABASES STARTING WITH EEPR
         run: |
            ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
-             export PGPASSFILE=~/.pgpass
+             export PGPASSFILE=~/gl-notifications-test-rds.pgpass
+             sudo chmod 600 gl-notifications-test-rds.pgpass
+             sudo chown ec2-user:ec2-user ~/gl-notifications-test-rds.pgpass
              psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds << 'PSQL_EOF'
                DO $$ 
                DECLARE 
