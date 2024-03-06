@@ -142,8 +142,12 @@
                 sudo chown ec2-user:ec2-user ~/gl-notifications-test-rds.pgpass
                 pg_dump -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -f gl-notifications-test-rds-bkp.dump
                 psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "CREATE DATABASE eepr${{ github.event.number }}db;"
+                \l+
                 psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eepr${{ github.event.number }} -c "CREATE SCHEMA IF NOT EXISTS eepr${{ github.event.number }}sch;"
-                psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eeprdb < gl-notifications-test-rds-bkp.dump
+                \dn
+                psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eepr${{ github.event.number }} < gl-notifications-test-rds-bkp.dump
+                \l+
+                \dn
               EOF
 #              psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "CREATE SCHEMA IF NOT EXISTS eepr${{ github.event.number }};"
               
