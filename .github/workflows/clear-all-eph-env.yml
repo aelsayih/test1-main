@@ -37,7 +37,6 @@ jobs:
           done
         continue-on-error: true
 
-  
       - name: DESTROY ALL TERRAFORMs
         working-directory: ./tf-config
         run: |
@@ -99,3 +98,4 @@ jobs:
               vcluster delete "$name"
             done < vcluster_names.txt
         continue-on-error: true
+        
