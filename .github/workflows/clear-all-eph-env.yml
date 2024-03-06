@@ -35,7 +35,7 @@ jobs:
             echo "Updating Lambda function: ${FUNCTION}"
             aws lambda update-function-configuration --function-name "${FUNCTION}" --vpc-config SubnetIds=[],SecurityGroupIds=[]
           done
-        continue-on-error: true
+        #continue-on-error: true
 
       - name: DESTROY ALL TERRAFORMs
         working-directory: ./tf-config
@@ -49,7 +49,7 @@ jobs:
               echo "Destroying Terraform state file: ${STATE}"
               cat main.tf | grep '^\s*key\s*='    
             done
-        continue-on-error: true
+        #continue-on-error: true
     
       - name: DELETE TF STATE FILES FROM S3
         run: |
@@ -58,7 +58,7 @@ jobs:
             aws s3 rm s3://eph-env-test-s3/$STATE
             echo "Deleted object: $STATE"
           done
-        continue-on-error: true
+        #continue-on-error: true
          
       - name: Generate kube config
         run: aws eks update-kubeconfig --region us-east-1 --name ${{ secrets.EKS_TEST_CLUSTER_NAME }}
@@ -87,7 +87,7 @@ jobs:
                END $$;
              PSQL_EOF
            EOF
-        continue-on-error: true
+        #continue-on-error: true
 
       - name: DELETE ALL VCLUSTERS
         run: | 
@@ -97,5 +97,5 @@ jobs:
             while IFS= read -r name; do
               vcluster delete "$name"
             done < vcluster_names.txt
-        continue-on-error: true
-        
+        #continue-on-error: true
+
