@@ -71,23 +71,40 @@ jobs:
         with:
             ssh-private-key: ${{ secrets.BASTION_PRIVATE_KEY }}
 
-      - name: DELETE ALL RDS NEW SCHEMAs
+      - name: DELETE ALL RDS DATABASES STARTING WITH EEPR
         run: |
            ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
              export PGPASSFILE=~/.pgpass
              psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds << 'PSQL_EOF'
                DO $$ 
                DECLARE 
-                 loop_schema_name text; 
+                 loop_db_name text; 
                BEGIN 
-                 FOR loop_schema_name IN (SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'eepr%') 
+                 FOR loop_db_name IN (SELECT datname FROM pg_database WHERE datname LIKE 'eepr%') 
                  LOOP 
-                   EXECUTE 'DROP SCHEMA IF EXISTS ' || loop_schema_name || ' CASCADE'; 
+                   EXECUTE 'DROP DATABASE IF EXISTS ' || quote_ident(loop_db_name) || ' CASCADE'; 
                  END LOOP; 
                END $$;
              PSQL_EOF
            EOF
-        #continue-on-error: true
+
+#      - name: DELETE ALL RDS NEW SCHEMAs
+#        run: |
+#           ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
+#             export PGPASSFILE=~/.pgpass
+#             psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds << 'PSQL_EOF'
+#               DO $$ 
+#               DECLARE 
+#                 loop_schema_name text; 
+#               BEGIN 
+#                 FOR loop_schema_name IN (SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'eepr%') 
+#                 LOOP 
+#                   EXECUTE 'DROP SCHEMA IF EXISTS ' || loop_schema_name || ' CASCADE'; 
+#                 END LOOP; 
+#               END $$;
+#             PSQL_EOF
+#           EOF
+#        #continue-on-error: true
 
       - name: DELETE ALL VCLUSTERS
         run: | 
