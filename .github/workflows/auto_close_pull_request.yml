@@ -1,0 +1,26 @@
+name: Auto-Close PRs AAfter 48-Hours
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-close:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check pull request creation time
+        id: pr_creation_time
+        run: echo "::set-output name=created_at::$(jq -r '.pull_request.created_at' $GITHUB_EVENT_PATH)"
+
+      - name: Close stale pull requests
+        if: ${{ steps.pr_creation_time.outputs.created_at <= formatTime(now(), '%Y-%m-%dT%H:%M:%SZ', 48) }}
+        id: close_pr
+        uses: octokit/request-action@v2.x
+        with:
+          route: DELETE /repos/:owner/:repo/pulls/${{ github.event.pull_request.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
