@@ -1,5 +1,5 @@
 # GH Repo SECRETS Needed to be:
-  
+
   # change region from "us-east-1" to the new one
   # change profile name from "bt-platform-test-eks-eph" to the new one
   # TF_REMOTE_REPO --> ONLY the name of remote-repo without .git (like test-tf), remote repo should be under same github account
@@ -109,7 +109,6 @@
     
         - name: Create VCluster
           run: |
-              vcluster delete eepr
               vcluster create eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} --connect=false
   #          vcluster create eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} --connect=false --upgrade -f ./vc-syncer-values/syncer-values.yaml
   #          vcluster create eepr${{ github.event.number }}--namespace eepr${{ github.event.number }} --connect=false --upgrade --extra-values ./vc-syncer-values/syncer-values.yaml
