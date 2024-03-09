@@ -134,7 +134,7 @@
           with:
             ssh-private-key: ${{ secrets.BASTION_PRIVATE_KEY }}
 
-        - name: Bastion-Host SSH & Create New RDS-Schema 
+        - name: Bastion-Host SSH & Create New RDS-Database
           run: |
               ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
                 export PGPASSFILE=~/gl-notifications-test-rds.pgpass
@@ -145,6 +145,7 @@
                 psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eepr${{ github.event.number }}db < gl-notifications-test-rds-bkp.dump
               EOF
 #  psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d eepr${{ github.event.number }}db -c "CREATE SCHEMA IF NOT EXISTS eepr${{ github.event.number }}sch;"
+
 
     Comment-PR-with-Endpoint:
       needs: Provision-SQS-Lambda-VCluster

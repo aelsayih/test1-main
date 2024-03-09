@@ -61,7 +61,7 @@ jobs:
         with:
             ssh-private-key: ${{ secrets.BASTION_PRIVATE_KEY }}
 
-      - name: Bastion-Host SSH & Drop New RDS-Schema 
+      - name: Bastion-Host SSH & Drop New RDS-Database
         run: |
           ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
             export PGPASSFILE=~/gl-notifications-test-rds.pgpass
