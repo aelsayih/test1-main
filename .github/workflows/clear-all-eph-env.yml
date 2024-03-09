@@ -100,7 +100,9 @@ jobs:
 
       - name: DELETE ALL VCLUSTERS
         run: | 
-            curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" && sudo install -c -m 0755 vcluster /usr/local/bin && sudo rm -f vcluster
+            curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64"
+            sudo install -c -m 0755 vcluster /usr/local/bin
+            sudo rm -f vcluster
             vcluster list --output json | jq -r '.[] | select(.Name != null) | select(.Name != "") | .Name' > vcluster_names.txt
             echo "VCluster Names: $(cat vcluster_names.txt)"
             while IFS= read -r name; do
