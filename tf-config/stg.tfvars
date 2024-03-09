@@ -19,7 +19,7 @@ is_subscribed_to_sns       = false
 
 ########################################## VPC Variables
 vpc_cidr             = "10.8.2.0/24"
-vpc_name             = "btech-retail-stg-vpc"
+vpc_name             = "btech-retail-test-vpc"   ###
 #private_subnet_cidrs = ["10.8.2.0/27", "10.8.2.32/27", "10.8.2.64/27"]
 public_subnet_cidrs  = ["10.8.2.96/27", "10.8.2.128/27", "10.8.2.160/27"]
 availability_zones   = ["us-east-1a", "us-east-1b", "us-east-1c"]
@@ -37,9 +37,9 @@ alb_sg_allowed_ips = ["10.8.1.0/24", "41.187.108.130/32", "196.219.245.74/32", "
 eks_sg_name = "eks-stg-SG"
 
 ########################################## EKS Variables
-cluster_name    = "btech-retail-stg-eks"
+cluster_name    = "btech-retail-test-eks"
 cluster_version = "1.28"
-profile_name    = "btech-terraform-retail-stg"
+profile_name    = "btech-retail-test-eks"
 
 ########################################## EKS-NodeGroup Variables
 node_group_name           = "btech-retail-stg-eks-node-group"
