@@ -71,24 +71,14 @@ jobs:
         with:
             ssh-private-key: ${{ secrets.BASTION_PRIVATE_KEY }}
 
-      - name: DELETE ALL RDS DATABASES STARTING WITH EEPR
+      - name: Bastion-Host SSH & Drop New RDS-Databases
         run: |
-           ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
-             export PGPASSFILE=~/gl-notifications-test-rds.pgpass
-             sudo chmod 600 gl-notifications-test-rds.pgpass
-             sudo chown ec2-user:ec2-user ~/gl-notifications-test-rds.pgpass
-             psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds << 'PSQL_EOF'
-               DO $$ 
-               DECLARE 
-                 loop_db_name text; 
-               BEGIN 
-                 FOR loop_db_name IN (SELECT datname FROM pg_database WHERE datname LIKE 'eepr%') 
-                 LOOP 
-                   EXECUTE 'DROP DATABASE IF EXISTS ' || quote_ident(loop_db_name) || ' CASCADE'; 
-                 END LOOP; 
-               END $$;
-             PSQL_EOF
-           EOF
+            ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
+              export PGPASSFILE=~/gl-notifications-test-rds.pgpass
+              sudo chmod 600 ~/gl-notifications-test-rds.pgpass
+              sudo chown ec2-user:ec2-user ~/gl-notifications-test-rds.pgpass
+              psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "SELECT datname FROM pg_database WHERE datname LIKE 'eepr%';" | grep -v "datname" | xargs -I {} psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "DROP DATABASE {};"
+            EOF
 
 #      - name: DELETE ALL RDS NEW RDS-Databases
 #        run: |
