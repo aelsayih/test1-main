@@ -1,0 +1,98 @@
+name: CAREFULLY REVIEW - ITS CLEAR ALL EPHEMERAL ENV.S
+
+on: workflow_dispatch
+
+jobs:
+  CLEAN-ALL-EPH-ENV:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code Repository
+        uses: actions/checkout@v3 #####v2
+
+      - name: Set up SSH agent for Clone TF Remote Repo
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRI }}
+
+      - name: Clone & Copy TF-Modules from Remote Repository #
+        run: |
+            TF_REMOTE_REPO="${{ secrets.TF_REMOTE_REPO }}"
+            git clone --depth=1 git@github.com:${{ github.repository_owner }}/${TF_REMOTE_REPO}.git temp_repo
+            mv temp_repo/modules . && rm -rf temp_repo
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_TEST1_V }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_TEST1_V }}
+          aws-region: us-east-1
+          KUBECONFIG: ~/.kube/config
+  
+      - name: DE-ATTACH ALL LAMBDA VPCs
+        run: |
+          FUNCTIONS=$(aws lambda list-functions --query "Functions[?starts_with(FunctionName, 'eepr')].FunctionName" --output json)
+          for FUNCTION in $(echo "${FUNCTIONS}" | jq -r '.[]'); do
+            echo "Updating Lambda function: ${FUNCTION}"
+            aws lambda update-function-configuration --function-name "${FUNCTION}" --vpc-config SubnetIds=[],SecurityGroupIds=[]
+          done
+        #continue-on-error: true
+
+      - name: DESTROY ALL TERRAFORMs
+        working-directory: ./tf-config
+        run: |
+            STATE_FILES=$(aws s3api list-objects --bucket eph-env-test-s3 --prefix "eepr" --query "Contents[].Key" --output json)
+            for STATE in $(echo "${STATE_FILES}" | jq -r '.[]'); do
+              sed -i "s/key[[:space:]]*=[[:space:]]*\".*\"/key = \"$STATE\"/" main.tf
+              terraform init -reconfigure
+              terraform destroy -var-file stg.tfvars -state="${STATE}" -auto-approve -input=false
+              echo "Updated main.tf with key = \"$FILE\""
+              echo "Destroying Terraform state file: ${STATE}"
+              cat main.tf | grep '^\s*key\s*='    
+            done
+        #continue-on-error: true
+    
+      - name: DELETE TF STATE FILES FROM S3
+        run: |
+          STATE_FILES=$(aws s3api list-objects --bucket eph-env-test-s3 --prefix "eepr" --query "Contents[].Key" --output json)
+          for STATE in $(echo "${STATE_FILES}" | jq -r '.[]'); do
+            aws s3 rm s3://eph-env-test-s3/$STATE
+            echo "Deleted object: $STATE"
+          done
+        #continue-on-error: true
+         
+      - name: Generate kube config
+        run: aws eks update-kubeconfig --region us-east-1 --name ${{ secrets.EKS_TEST_CLUSTER_NAME }}
+
+      - name: Set up PostgreSQL Client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Set up Bastion-Host SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+            ssh-private-key: ${{ secrets.BASTION_PRIVATE_KEY }}
+
+      - name: Bastion-Host SSH & Drop New RDS-Databases
+        run: |
+            ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
+              export PGPASSFILE=~/gl-notifications-test-rds.pgpass
+              sudo chmod 600 ~/gl-notifications-test-rds.pgpass
+              sudo chown ec2-user:ec2-user ~/gl-notifications-test-rds.pgpass
+              psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -t -c "SELECT datname FROM pg_database WHERE datname LIKE 'eepr%';" | grep -v "datname" | xargs -I {} psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "DROP DATABASE \"{}\";"
+            #psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "SELECT datname FROM pg_database WHERE datname LIKE 'eepr%';" | grep -v "datname" | xargs -I {} psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "DROP DATABASE {};"
+            EOF
+#        #continue-on-error: true
+#psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "SELECT datname FROM pg_database WHERE datname LIKE 'eepr%';" | grep -v "datname" | xargs -I {} psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds -c "DROP DATABASE {};"
+
+
+      - name: DELETE ALL VCLUSTERS
+        run: | 
+            curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64"
+            sudo install -c -m 0755 vcluster /usr/local/bin
+            sudo rm -f vcluster
+            vcluster list --output json | jq -r '.[] | select(.Name != null) | select(.Name != "") | .Name' > vcluster_names.txt
+            echo "VCluster Names: $(cat vcluster_names.txt)"
+            while IFS= read -r name; do
+              vcluster delete "$name"
+            done < vcluster_names.txt
+        #continue-on-error: true
+
