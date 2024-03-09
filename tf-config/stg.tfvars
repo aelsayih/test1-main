@@ -18,23 +18,23 @@ is_subscribed_to_sns       = false
 
 
 ########################################## VPC Variables
-vpc_cidr             = "10.8.2.0/24"
-vpc_name             = "btech-retail-test-vpc"   ###
-#private_subnet_cidrs = ["10.8.2.0/27", "10.8.2.32/27", "10.8.2.64/27"]
-public_subnet_cidrs  = ["10.8.2.96/27", "10.8.2.128/27", "10.8.2.160/27"]
+vpc_cidr             = "10.8.0.0/19"
+vpc_name             = "btech-retail-test-vpc"
+private_subnet_cidrs = ["10.8.0.0/22", "10.8.4.0/22", "10.8.8.0/22", "10.8.24.0/25", "10.8.24.128/25", "10.8.25.0/25" ]
+public_subnet_cidrs  = ["10.8.26.0/25", "10.8.25.128/25"]
 availability_zones   = ["us-east-1a", "us-east-1b", "us-east-1c"]
-#
+
 ## ######################################## Security-Group Variables
-ec2_sg_sg_name     = "bastion-stg-SG"
+ec2_sg_sg_name     = "bastion-sg"
 ec2_sg_allowed_ips = ["10.8.1.0/24", "41.187.108.130/32", "196.219.245.74/32", "196.219.45.50/32", "196.204.32.226/32", "84.36.24.98/32", "41.33.160.241/32"]
 
-rds_sg_name        = "rds-stg-SG"
+rds_sg_name        = "rds-sg"
 rds_sg_allowed_ips = ["10.8.2.0/24"]
 
-alb_sg_name        = "alb-stg-SG"
+alb_sg_name        = "alb-sg"
 alb_sg_allowed_ips = ["10.8.1.0/24", "41.187.108.130/32", "196.219.245.74/32", "196.219.45.50/32", "196.204.32.226/32", "84.36.24.98/32", "41.33.160.241/32"]
 
-eks_sg_name = "eks-stg-SG"
+eks_sg_name = "eks-sg"
 
 ########################################## EKS Variables
 cluster_name    = "btech-retail-test-eks"
@@ -42,7 +42,7 @@ cluster_version = "1.28"
 profile_name    = "btech-retail-test-eks"
 
 ########################################## EKS-NodeGroup Variables
-node_group_name           = "btech-retail-stg-eks-node-group"
+node_group_name           = "btech-retail-test-eks-node-group"
 node_group_min_size       = 1
 node_group_desired_size   = 1
 node_group_max_size       = 2
@@ -51,8 +51,8 @@ node_group_disk_size      = 30
 node_group_instance_types = ["t3.large"]
 
 ########################################### EKS-Addon Variables
-ingress_group_name     = "retial-stg"
-argo_cd_lb_domain_name = "rtstgargo.btechlabs.io"
+ingress_group_name     = "retial-stg"           ###########
+argo_cd_lb_domain_name = "rtstgargo.btechlabs.io"  ###########
 
 ########################################## ACM Variables
 #acm_domain_name = "btechlabs.io"
