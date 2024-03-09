@@ -152,6 +152,14 @@
       permissions:
         pull-requests: write
       steps:
+#        - name: Wait for Lambda to Complete
+#          id: wait-lambda
+#          uses: octokit/wait-for-status@v1
+#          with:
+#            checks: "completed"
+#            status: "success"
+#            repo-token: ${{ secrets.GITHUB_TOKEN }}
+
         - name: Comment PR
           uses: mshick/add-pr-comment@v2
           with:

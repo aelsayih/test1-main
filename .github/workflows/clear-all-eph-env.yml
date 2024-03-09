@@ -90,16 +90,16 @@ jobs:
              PSQL_EOF
            EOF
 
-#      - name: DELETE ALL RDS NEW SCHEMAs
+#      - name: DELETE ALL RDS NEW RDS-Databases
 #        run: |
 #           ssh -o StrictHostKeyChecking=no -A -L 5432:34.207.98.242:5432 ec2-user@34.207.98.242 'bash -s' << 'EOF'
 #             export PGPASSFILE=~/.pgpass
 #             psql -h gl-notifications-test-rds.cluster-c74weq8kegwi.us-east-1.rds.amazonaws.com -p 5432 -U retailtest -d gl-notifications-test-rds << 'PSQL_EOF'
 #               DO $$ 
 #               DECLARE 
-#                 loop_schema_name text; 
+#                 loop_RDS-Database_name text; 
 #               BEGIN 
-#                 FOR loop_schema_name IN (SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'eepr%') 
+#                 FOR loop_RDS-Database_name IN (SELECT RDS-Database_name FROM information_schema.schemata WHERE schema_name LIKE 'eepr%') 
 #                 LOOP 
 #                   EXECUTE 'DROP SCHEMA IF EXISTS ' || loop_schema_name || ' CASCADE'; 
 #                 END LOOP; 
