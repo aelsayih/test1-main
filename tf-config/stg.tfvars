@@ -58,10 +58,10 @@ argo_cd_lb_domain_name = "rtstgargo.btechlabs.io"  ###########
 #acm_domain_name = "btechlabs.io"
 #
 ######################################### EC2 Variables
-instance_name             = "btech-retail-stg-bastion"
-instance_type             = "t3.micro"
-instance_root_volume_size = 10
-allow_eks_access          = true
+#instance_name             = "btech-retail-stg-bastion"
+#instance_type             = "t3.micro"
+#instance_root_volume_size = 10
+#allow_eks_access          = true
 #
 ######################################### SSH-KEY Variables
 key_name         = "btech-retail-stg-bastion-sshkey"
