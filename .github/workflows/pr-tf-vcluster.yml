@@ -114,17 +114,18 @@
   #          vcluster create eepr${{ github.event.number }}--namespace eepr${{ github.event.number }} --connect=false --upgrade --extra-values ./vc-syncer-values/syncer-values.yaml
   
         - name: Connect VCluster, Helm (ArgoRollout)
-          id: connect-vcluster
           run: |
              vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm repo add argo https://argoproj.github.io/argo-helm
              vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm upgrade --install my-release argo/argo-rollouts --set dashboard.enabled=true
-             vcluster_endpoint_url=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')
-             echo "VCLUSTER_ENDPOINT_URL=${vcluster_endpoint_url}"
-             echo "##[set-output name=VCLUSTER_ENDPOINT_URL;]${vcluster_endpoint_url}"  
   #          vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- kubectl get ns
         
         - name: Connect VCluster, Helm (NGinx)
-          run: vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm upgrade --install nginx-app ./nginx --values ./nginx/values.yaml
+          id: connect-vcluster
+          run: |
+            vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm upgrade --install nginx-app ./nginx --values ./nginx/values.yaml
+            vcluster_endpoint_url=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')
+            echo "VCLUSTER_ENDPOINT_URL=${vcluster_endpoint_url}"
+            echo "##[set-output name=VCLUSTER_ENDPOINT_URL;]${vcluster_endpoint_url}"  
 
         - name: Set up PostgreSQL Client
           run: sudo apt-get install -y postgresql-client
