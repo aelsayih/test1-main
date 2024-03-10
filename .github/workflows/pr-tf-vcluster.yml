@@ -121,7 +121,9 @@
         - name: Connect VCluster, Helm (NGinx)
           id: connect-vcluster
           run: |
-            vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm upgrade --install nginx-app ./nginx --values ./nginx/values.yaml
+            vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }}
+            kubectl apply -n eepr${{ github.event.number }} -f https://raw.githubusercontent.com/argoproj/argo-rollouts/stable/manifests/install.yaml
+            helm upgrade --install nginx-app ./nginx --values ./nginx/values.yaml
             vcluster_endpoint_url=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')
             echo "VCLUSTER_ENDPOINT_URL=${vcluster_endpoint_url}"
             echo "##[set-output name=VCLUSTER_ENDPOINT_URL;]${vcluster_endpoint_url}"  
