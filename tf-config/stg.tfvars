@@ -68,33 +68,32 @@ key_name         = "btech-retail-stg-bastion-sshkey"
 
 ######################################### RDS Variables
 ##--------------------------------- RDS-1
-rds1_identifier              = "gl-scheduling-stg-rds"
+rds1_identifier              = "gl-notifications-test-rds"
 rds1_engine_version          = "14.6"
-rds1_db_username             = "retailstg"
+rds1_db_username             = "retailtest"
 rds1_database_name           = "postgres"
 rds1_backup_retention_period = 7
 rds1_skip_final_snapshot     = true
-#rds1_serverless_min_capacity = 0.5
+rds1_serverless_min_capacity = 0.5
 rds1_serverless_max_capacity = 5
-rds1_secret_name             = "gl-scheduling-stg-rds-ssm"
+rds1_secret_name             = "gl-notifications-test-rds-ssm"
 rds1_instance_count          = 1
 rds1_instance_class          = "db.serverless"
 rds1_publicly_accessible     = false
 
 #--------------------------------- RDS-2
-rds2_identifier              = "gl-notifications-stg-rds"
-rds2_engine_version          = "14.6"
-rds2_db_username             = "retailstg"
-rds2_database_name           = "postgres"
+#rds2_identifier              = "gl-scheduling-stg-rds"
+#rds2_engine_version          = "14.6"
+#rds2_db_username             = "retailstg"
+#rds2_database_name           = "postgres"
 #rds2_backup_retention_period = 7
-rds2_skip_final_snapshot     = true
-rds2_serverless_min_capacity = 0.5
-rds2_serverless_max_capacity = 5
-rds2_secret_name             = "gl-notifications-stg-rds-ssm"
-rds2_instance_count          = 1
-rds2_instance_class          = "db.serverless"
-rds2_publicly_accessible     = false
-
+#rds2_skip_final_snapshot     = true
+#rds2_serverless_min_capacity = 0.5
+#rds2_serverless_max_capacity = 5
+#rds2_secret_name             = "gl-notifications-stg-rds-ssm"
+#rds2_instance_count          = 1
+#rds2_instance_class          = "db.serverless"
+#rds2_publicly_accessible     = false
 #
 ######################################### RDS subnet group Variables
 db_subnet_group_name         = "stg-subnet-group"
