@@ -166,5 +166,4 @@
           with:
             message: |
               Your Ephemeral Environment is Created Successfully
-              PLEASE, LOGIN FIRST INTO TEST EVN. (EKS TEST CLUSTER) TO ACCESS YOUR PR. ENV.
               So Your PR EndPoint URL is: ${{ needs.Provision-SQS-Lambda-VCluster.outputs.VCLUSTER_ENDPOINT_URL }}

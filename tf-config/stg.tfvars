@@ -46,7 +46,7 @@ node_group_name           = "btech-retail-test-eks-node-group"
 node_group_min_size       = 1
 node_group_desired_size   = 1
 node_group_max_size       = 2
-node_group_capacity_type  = "ON_DEMAND"
+#node_group_capacity_type  = "ON_DEMAND"
 node_group_disk_size      = 30
 node_group_instance_types = ["t3.large"]
 
@@ -60,7 +60,7 @@ ingress_group_name     = "retial-stg"           ###########
 ######################################### EC2 Variables
 instance_name             = "btech-retail-stg-bastion"
 instance_type             = "t3.micro"
-instance_root_volume_size = 10
+#instance_root_volume_size = 10
 allow_eks_access          = true
 
 ######################################### SSH-KEY Variables
