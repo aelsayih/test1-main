@@ -113,10 +113,10 @@
   #          vcluster create eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} --connect=false --upgrade -f ./vc-syncer-values/syncer-values.yaml
   #          vcluster create eepr${{ github.event.number }}--namespace eepr${{ github.event.number }} --connect=false --upgrade --extra-values ./vc-syncer-values/syncer-values.yaml
   
-        - name: Connect VCluster, Helm (ArgoRollout)
-          run: |
-             vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm repo add argo https://argoproj.github.io/argo-helm
-             vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm upgrade --install my-release argo/argo-rollouts --set dashboard.enabled=true
+#        - name: Connect VCluster, Helm (ArgoRollout)
+#          run: |
+#             vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm repo add argo https://argoproj.github.io/argo-helm
+#             vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm upgrade --install my-release argo/argo-rollouts --set dashboard.enabled=true
         
         - name: Connect VCluster, Helm (NGinx)
           id: connect-vcluster
