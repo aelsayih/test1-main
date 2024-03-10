@@ -22,7 +22,7 @@ vpc_cidr             = "10.8.0.0/19"
 vpc_name             = "btech-retail-test-vpc"
 private_subnet_cidrs = ["10.8.0.0/22", "10.8.4.0/22", "10.8.8.0/22", "10.8.24.0/25", "10.8.24.128/25", "10.8.25.0/25" ]
 public_subnet_cidrs  = ["10.8.26.0/25", "10.8.25.128/25"]
-availability_zones   = ["us-east-1a", "us-east-1b", "us-east-1c"]
+#availability_zones   = ["us-east-1a", "us-east-1b", "us-east-1c"]
 
 ## ######################################## Security-Group Variables
 ec2_sg_sg_name     = "bastion-sg"
@@ -52,7 +52,7 @@ node_group_instance_types = ["t3.large"]
 
 ########################################### EKS-Addon Variables
 ingress_group_name     = "retial-stg"           ###########
-argo_cd_lb_domain_name = "rtstgargo.btechlabs.io"  ###########
+#argo_cd_lb_domain_name = "rtstgargo.btechlabs.io"  ###########
 
 ########################################## ACM Variables
 #acm_domain_name = "btechlabs.io"
