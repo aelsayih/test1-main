@@ -123,8 +123,8 @@
              echo "##[set-output name=VCLUSTER_ENDPOINT_URL;]${vcluster_endpoint_url}"  
   #          vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- kubectl get ns
         
-        - name: Connect VCluster, Helm (NGinx)
-          run: vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm upgrade --install nginx-app ./nginx --values ./nginx/values.yaml
+#        - name: Connect VCluster, Helm (NGinx)
+#          run: vcluster connect eepr${{ github.event.number }} --namespace eepr${{ github.event.number }} -- helm upgrade --install nginx-app ./nginx --values ./nginx/values.yaml
 
         - name: Set up PostgreSQL Client
           run: sudo apt-get install -y postgresql-client
