@@ -9,7 +9,7 @@ jobs:
       - name: Checkout Source Code Repository
         uses: actions/checkout@v3 #####v2
 
-      - name: Set up SSH agent for Clone TF Remote Repo
+      - name: Setup SSH agent for Clone TF Remote Repo
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRI }}
@@ -63,10 +63,10 @@ jobs:
       - name: Generate kube config
         run: aws eks update-kubeconfig --region us-east-1 --name ${{ secrets.EKS_TEST_CLUSTER_NAME }}
 
-      - name: Set up PostgreSQL Client
+      - name: Setup PostgreSQL Client
         run: sudo apt-get install -y postgresql-client
 
-      - name: Set up Bastion-Host SSH
+      - name: Setup Bastion-Host SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
             ssh-private-key: ${{ secrets.BASTION_PRIVATE_KEY }}

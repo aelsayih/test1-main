@@ -45,7 +45,7 @@
         - name: Checkout Source Code Repository
           uses: actions/checkout@v3 #####v2
   
-        - name: Set up SSH agent for Clone TF Remote Repo
+        - name: Setup SSH agent for Clone TF Remote Repo
           uses: webfactory/ssh-agent@v0.5.4
           with:
             ssh-private-key: ${{ secrets.SSH_PRI }}
@@ -127,10 +127,10 @@
             echo "VCLUSTER_ENDPOINT_URL=${vcluster_endpoint_url}"
             echo "##[set-output name=VCLUSTER_ENDPOINT_URL;]${vcluster_endpoint_url}"  
 
-        - name: Set up PostgreSQL Client
+        - name: Setup PostgreSQL Client
           run: sudo apt-get install -y postgresql-client
 
-        - name: Set up Bastion-Host SSH
+        - name: Setup Bastion-Host SSH
           uses: webfactory/ssh-agent@v0.5.0
           with:
             ssh-private-key: ${{ secrets.BASTION_PRIVATE_KEY }}
